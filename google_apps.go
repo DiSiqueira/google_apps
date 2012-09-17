@@ -3,7 +3,6 @@ package google_apps
 import (
 	"code.google.com/p/gorilla/sessions"
 	"github.com/fduraffourg/go-openid"
-	"log"
 	"net/http"
 	"net/url"
 )
@@ -17,10 +16,7 @@ func ProtectionHandler(domain string, app http.HandlerFunc) http.HandlerFunc {
 	store := sessions.NewCookieStore([]byte(domain))
 
 	return func(w http.ResponseWriter, r *http.Request) {
-
 		session, _ := store.Get(r, "login")
-
-		log.Print(r.URL.Path)
 
 		if r.FormValue("openid.mode") == "id_res" {
 			_, id, err := openid.Verify(r.URL.String())
@@ -45,14 +41,11 @@ func ProtectionHandler(domain string, app http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		log.Printf("%v", session)
-
 		if session.Values["id"] == nil {
 
 			// Store the return_to url in the session to that we can sent people to the right spot
 			currentUrl := url.URL{Path: r.URL.Path, RawQuery: r.URL.RawQuery}
 			session.Values["return_to"] = currentUrl.String()
-			log.Printf("Will send you back to %s", currentUrl.String())
 			session.Save(r, w)
 
 			// Get the auth url that we need for this. 
