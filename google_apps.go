@@ -1,4 +1,4 @@
-package google_app
+package google_apps
 
 import (
 	"code.google.com/p/gorilla/sessions"
