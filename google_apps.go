@@ -7,13 +7,26 @@ import (
 	"net/url"
 )
 
+var store = sessions.NewCookieStore([]byte(""))
+
+// Receive the identity that's associated with the session
+func Identity(r *http.Request) string {
+	session, _ := store.Get(r, "login")
+	return session.Values["id"].(string)
+}
+
+// Is the request authenticated? 
+func IsAuthenticated(r *http.Request) bool {
+	session, _ := store.Get(r, "login")
+	return session.Values["id"] != nil
+}
+
 // GoogleAppsHandler "middleware". 
 // Wraps the passed HandlerFunc with google apps authentication
 // 
 // Example: 
 //   http.HandleFunc("/", google_app.ProtectionHandler("jadedpixel.com", NotFound))
 func ProtectionHandler(domain string, app http.HandlerFunc) http.HandlerFunc {
-	store := sessions.NewCookieStore([]byte(domain))
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		session, _ := store.Get(r, "login")
