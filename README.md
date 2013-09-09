@@ -6,4 +6,4 @@ Example:
 
     import "github.com/shopify/google_apps"
 
-    http.HandleFunc("/", google_app.ProtectionHandler("shopify.com", YourOwnHttpHandler))
+    http.HandleFunc("/", google_apps.ProtectionHandler("shopify.com", YourOwnHttpHandler))
