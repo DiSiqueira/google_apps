@@ -1,0 +1,9 @@
+name: google_apps
+
+up:
+  - go: 1.6.2
+
+commands:
+  test:
+    run: go build
+    desc: 'attempt to build the project'

@@ -1,10 +1,11 @@
 package google_apps
 
 import (
-	"code.google.com/p/gorilla/sessions"
-	"github.com/fduraffourg/go-openid"
 	"net/http"
 	"net/url"
+
+	"github.com/akavel/go-openid"
+	"github.com/gorilla/sessions"
 )
 
 var store = sessions.NewCookieStore([]byte(""))
@@ -15,16 +16,16 @@ func Identity(r *http.Request) string {
 	return session.Values["id"].(string)
 }
 
-// Is the request authenticated? 
+// Is the request authenticated?
 func IsAuthenticated(r *http.Request) bool {
 	session, _ := store.Get(r, "login")
 	return session.Values["id"] != nil
 }
 
-// GoogleAppsHandler "middleware". 
+// GoogleAppsHandler "middleware".
 // Wraps the passed HandlerFunc with google apps authentication
-// 
-// Example: 
+//
+// Example:
 //   http.HandleFunc("/", google_app.ProtectionHandler("jadedpixel.com", NotFound))
 func ProtectionHandler(domain string, app http.HandlerFunc) http.HandlerFunc {
 
@@ -61,9 +62,9 @@ func ProtectionHandler(domain string, app http.HandlerFunc) http.HandlerFunc {
 			session.Values["return_to"] = currentUrl.String()
 			session.Save(r, w)
 
-			// Get the auth url that we need for this. 
+			// Get the auth url that we need for this.
 			// We will use the current url minus the query string as a return place so that we can ensure
-			// that this handler gets it back. We can't guess in what kind of sub paths this handler may be 
+			// that this handler gets it back. We can't guess in what kind of sub paths this handler may be
 			// installed otherwise
 			url, err := openid.GetRedirectURL("https://www.google.com/accounts/o8/site-xrds?hd="+domain, "http://"+r.Host, r.URL.Path)
 			if err != nil {
