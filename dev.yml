@@ -7,3 +7,7 @@ commands:
   test:
     run: go build
     desc: 'attempt to build the project'
+
+packages:
+  - git@github.com:Shopify/dev-shopify.git
+
