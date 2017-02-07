@@ -10,19 +10,19 @@ import (
 
 var store = sessions.NewCookieStore([]byte(""))
 
-// Receive the identity that's associated with the session
+//Identity - Receive the identity that's associated with the session
 func Identity(r *http.Request) string {
 	session, _ := store.Get(r, "login")
 	return session.Values["id"].(string)
 }
 
-// Is the request authenticated?
+//IsAuthenticated - Is the request authenticated?
 func IsAuthenticated(r *http.Request) bool {
 	session, _ := store.Get(r, "login")
 	return session.Values["id"] != nil
 }
 
-// GoogleAppsHandler "middleware".
+//ProtectionHandler - GoogleAppsHandler "middleware".
 // Wraps the passed HandlerFunc with google apps authentication
 //
 // Example:
