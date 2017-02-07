@@ -7,3 +7,7 @@ Example:
     import "github.com/shopify/google_apps"
 
     http.HandleFunc("/", google_apps.ProtectionHandler("shopify.com", YourOwnHttpHandler))
+
+## License
+
+MIT License
