@@ -42,16 +42,16 @@ func ProtectionHandler(domain string, app http.HandlerFunc) http.HandlerFunc {
 
 			session.Values["id"] = id
 
-			url := session.Values["return_to"].(string)
-			if url == "" {
-				url = "/"
+			returnURL := session.Values["return_to"].(string)
+			if returnURL == "" {
+				returnURL = "/"
 			}
 
 			delete(session.Values, "return_to")
 
 			session.Save(r, w)
 
-			http.Redirect(w, r, url, http.StatusFound)
+			http.Redirect(w, r, returnURL, http.StatusFound)
 			return
 		}
 
