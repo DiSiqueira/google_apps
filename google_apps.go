@@ -58,21 +58,21 @@ func ProtectionHandler(domain string, app http.HandlerFunc) http.HandlerFunc {
 		if session.Values["id"] == nil {
 
 			// Store the return_to url in the session to that we can sent people to the right spot
-			currentUrl := url.URL{Path: r.URL.Path, RawQuery: r.URL.RawQuery}
-			session.Values["return_to"] = currentUrl.String()
+			currentURL := url.URL{Path: r.URL.Path, RawQuery: r.URL.RawQuery}
+			session.Values["return_to"] = currentURL.String()
 			session.Save(r, w)
 
 			// Get the auth url that we need for this.
 			// We will use the current url minus the query string as a return place so that we can ensure
 			// that this handler gets it back. We can't guess in what kind of sub paths this handler may be
 			// installed otherwise
-			url, err := openid.GetRedirectURL("https://www.google.com/accounts/o8/site-xrds?hd="+domain, "http://"+r.Host, r.URL.Path)
+			authURL, err := openid.GetRedirectURL("https://www.google.com/accounts/o8/site-xrds?hd="+domain, "http://"+r.Host, r.URL.Path)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
 
-			http.Redirect(w, r, url, http.StatusFound)
+			http.Redirect(w, r, authURL, http.StatusFound)
 			return
 		}
 
